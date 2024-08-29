@@ -12,12 +12,30 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link EmployeeService} interface for managing Employee entities.
+ *
+ * <p>This class provides the service layer functionality for creating and managing employees
+ * by interacting with the {@link EmployeeRepository}.</p>
+ *
+ * <p>It uses the {@link EmployeeMapper} to convert between {@link EmployeeDto} and
+ * {@link Employee} entities.</p>
+ */
 @Service
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
     private EmployeeRepository employeeRepository;
 
+    /**
+     * Creates a new employee in the repository.
+     *
+     * <p>This method converts the provided {@link EmployeeDto} to an {@link Employee} entity,
+     * persists it to the database, and then converts the saved entity back to a {@link EmployeeDto}.</p>
+     *
+     * @param employeeDto the data transfer object containing employee details
+     * @return the created {@link EmployeeDto} with the assigned ID
+     */
     @Override
     public EmployeeDto createEmployee(EmployeeDto employeeDto){
 
@@ -26,6 +44,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
     }
 
+    /**
+     * Retrieves an employee by their ID.
+     *
+     * <p>This method fetches an {@link Employee} entity from the repository by its ID. If the
+     * employee is not found, a {@link ResourceNotFoundException} is thrown with a message indicating
+     * that no employee exists with the provided ID.</p>
+     *
+     * @param employeeId the ID of the employee to retrieve
+     * @return the {@link EmployeeDto} corresponding to the employee with the given ID
+     * @throws ResourceNotFoundException if no employee is found with the specified ID
+     */
     @Override
     public EmployeeDto getEmployeeById(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
@@ -34,6 +63,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeMapper.mapToEmployeeDto(employee);
     }
 
+    /**
+     * Retrieves a list of all employees.
+     *
+     * <p>This method fetches all {@link Employee} entities from the repository,
+     * maps them to {@link EmployeeDto} objects, and returns them as a list.</p>
+     *
+     * @return a list of {@link EmployeeDto} representing all employees in the system
+     */
     @Override
     public List<EmployeeDto> getAllEmployees() {
         List<Employee> employees = employeeRepository.findAll();
@@ -41,6 +78,12 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Update employee by id
+     * @param employeeId Unique id to update employee
+     * @param updatedEmployee Employee DTO containing updated information
+     * @return Updated Employee DTO
+     */
     @Override
     public EmployeeDto updateEmployee(Long employeeId, EmployeeDto updatedEmployee) {
 
@@ -56,6 +99,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);
     }
 
+    /**
+     * Delete Employee by id
+     * @param employeeId
+     */
     @Override
     public void deleteEmployee(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).orElseThrow(

@@ -1,0 +1,37 @@
+spring:
+  application:
+  name: crud
+  datasource:
+    url=jdbc:postgresql://localhost:5432/cat
+    username=user-name
+    password=strong-password
+  jpa:
+    hibernate:
+      ddl-auto=update
+      dialect=org.hibernate.dialect.PostgreSQLDialect
+
+#mrugesh:
+#  swagger-devUrl: http://localhost:8080
+#  swagger-prodUrl: https://mrugesh-api.com
+
+springdoc:
+  swagger-ui:
+    path: /mrugesh-documentation
+    tryItOutEnabled: true
+    operationsSorter: method
+    tagsSorter: alpha
+    filter: true
+#    enabled: false
+
+  api-docs:
+    path: /mrugesh-api-docs
+#    enabled: false
+
+  packages-to-scan:
+    - com.mrugesh.crud.controller
+
+#spring.datasource.url=jdbc:postgresql://localhost:5432/cat
+#spring.datasource.username=user-name
+#spring.datasource.password=strong-password
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
