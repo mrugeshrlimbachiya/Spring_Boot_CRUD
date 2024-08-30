@@ -26,11 +26,21 @@ public class EmployeeController {
 
     public EmployeeService employeeService;
 
+    /**
+     * Constructs an EmployeeController with the specified EmployeeService.
+     *
+     * @param employeeService the service used to manage employees
+     */
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-
+    /**
+     * Creates a new employee record with the provided first name, last name, and email ID.
+     *
+     * @param employeeDto the employee data transfer object containing the new employee's information
+     * @return ResponseEntity containing the created EmployeeDto and HTTP status 201 (Created)
+     */
     @Operation(
             summary = "Create Employee",
             description = "Create a new employee record with the provided first name, last name, and email ID.",
@@ -49,7 +59,12 @@ public class EmployeeController {
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }
 
-
+    /**
+     * Retrieves an employee's information by their unique identifier (ID).
+     *
+     * @param employeeId the unique ID of the employee to retrieve
+     * @return ResponseEntity containing the EmployeeDto and HTTP status 200 (OK)
+     */
     @Operation(
             summary = "Get Employee by ID",
             description = "Retrieve an employee's first name, last name, and email ID by their unique identifier (ID).",
@@ -67,7 +82,11 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeDto);
     }
 
-
+    /**
+     * Retrieves the information of all employees.
+     *
+     * @return ResponseEntity containing a list of EmployeeDto and HTTP status 200 (OK)
+     */
     @Operation(
             summary = "Get All Employees",
             description = "Retrieve the first name, last name, and email ID of all employees.",
@@ -98,7 +117,19 @@ public class EmployeeController {
         return ResponseEntity.ok(employees);
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<EmployeeDto>> getAllEmployeesWithFilter(@RequestParam String email){
+        List<EmployeeDto> employeeDto = this.employeeService.getAllEmployeesWithFilter(email);
+        return ResponseEntity.ok(employeeDto);
+    }
 
+    /**
+     * Updates an employee's information by their unique identifier (ID).
+     *
+     * @param employeeId the unique ID of the employee to update
+     * @param updatedEmployee the employee data transfer object containing the updated information
+     * @return ResponseEntity containing the updated EmployeeDto and HTTP status 200 (OK)
+     */
     @Operation(
             summary = "Update Employee by ID",
             description = "Updates an employee's information, including first name, last name, and email ID, by their unique identifier (ID).",
@@ -111,13 +142,19 @@ public class EmployeeController {
     })
     //Build Update Employee REST API
     @PutMapping("{id}")
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeid,
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeId,
                                                       @RequestBody EmployeeDto updatedEmployee){
-        EmployeeDto employeeDto = employeeService.updateEmployee(employeeid, updatedEmployee);
+        EmployeeDto employeeDto = employeeService.updateEmployee(employeeId, updatedEmployee);
         return ResponseEntity.ok(employeeDto);
     }
 
 
+    /**
+     * Deletes an employee's information by their unique identifier (ID).
+     *
+     * @param employeeId the unique ID of the employee to delete
+     * @return ResponseEntity with a confirmation message and HTTP status 200 (OK)
+     */
     @Operation(
             summary = "Delete Employee by ID",
             description = "Deletes an employee's information, including first name, last name, and email ID, by their unique identifier (ID).",

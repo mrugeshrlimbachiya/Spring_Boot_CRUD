@@ -5,12 +5,14 @@ import com.mrugesh.crud.entity.Employee;
 import com.mrugesh.crud.exception.ResourceNotFoundException;
 import com.mrugesh.crud.mapper.EmployeeMapper;
 import com.mrugesh.crud.repository.EmployeeRepository;
+import com.mrugesh.crud.repository.specification.EmployeeSpecification;
 import com.mrugesh.crud.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -141,5 +143,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> employees = employeeRepository.findAll(Sort.by(Sort.Direction.ASC, field));
         return employees.stream().map(EmployeeMapper::mapToEmployeeDto)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * @param email
+     * @return
+     */
+    @Override
+    public List<EmployeeDto> getAllEmployeesWithFilter(String email) {
+        Specification<Employee> specification = EmployeeSpecification.filterEmployee(email);
+        List<Employee> employees = this.employeeRepository.findAll(specification);
+        return employees.stream().map(EmployeeMapper::mapToEmployeeDto).collect(Collectors.toList());
     }
 }
