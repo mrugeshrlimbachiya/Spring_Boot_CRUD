@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +82,19 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<List<EmployeeDto>>getAllEmployees(){
         List<EmployeeDto> employees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(employees);
+    }
+
+
+    @GetMapping("/pagination/{offset}/{pageSize}")
+    public ResponseEntity<Page<EmployeeDto>>getAllEmployeesWithPagination(@PathVariable int offset, @PathVariable int pageSize){
+        Page<EmployeeDto> employees = employeeService.getAllEmployeesWithPagination(offset, pageSize);
+        return ResponseEntity.ok(employees);
+    }
+
+    @GetMapping("/sort/{field}")
+    public ResponseEntity<List<EmployeeDto>>getAllEmployeesWithSorting(@PathVariable String field){
+        List<EmployeeDto> employees = employeeService.getAllEmployeesWithSorting(field);
         return ResponseEntity.ok(employees);
     }
 

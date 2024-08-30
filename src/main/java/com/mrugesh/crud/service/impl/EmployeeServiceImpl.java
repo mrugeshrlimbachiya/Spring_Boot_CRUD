@@ -7,6 +7,10 @@ import com.mrugesh.crud.mapper.EmployeeMapper;
 import com.mrugesh.crud.repository.EmployeeRepository;
 import com.mrugesh.crud.service.EmployeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,7 +83,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     /**
-     * Update employee by id
+     * Update an employee by their id
+     *
+     * <p>This method updates {@link Employee} entity from the repository by its ID.</p>
      * @param employeeId Unique id to update employee
      * @param updatedEmployee Employee DTO containing updated information
      * @return Updated Employee DTO
@@ -101,7 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * Delete Employee by id
-     * @param employeeId
+     * @param employeeId unique id to delete employee
      */
     @Override
     public void deleteEmployee(Long employeeId) {
@@ -111,5 +117,29 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employeeRepository.deleteById(employeeId);
 
+    }
+
+    /**
+     * Return employees by page size
+     * @param offset page number we want
+     * @param pageSize size of pages
+     * @return page with content
+     */
+    @Override
+    public Page<EmployeeDto> getAllEmployeesWithPagination(int offset, int pageSize){
+        Page<Employee> employees = employeeRepository.findAll(PageRequest.of(offset, pageSize));
+        return employees.map(EmployeeMapper::mapToEmployeeDto);
+    }
+
+    /**
+     * Return sorted List of employees
+     * @param field method use for sorting
+     * @return sorted elements
+     */
+    @Override
+    public List<EmployeeDto> getAllEmployeesWithSorting(String field) {
+        List<Employee> employees = employeeRepository.findAll(Sort.by(Sort.Direction.ASC, field));
+        return employees.stream().map(EmployeeMapper::mapToEmployeeDto)
+                .collect(Collectors.toList());
     }
 }
